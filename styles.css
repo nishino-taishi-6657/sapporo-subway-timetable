@@ -1,0 +1,199 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f9fc;
+}
+
+#app {
+    max-width: 400px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+h1 {
+    font-size: 1.6em;
+}
+
+#currentTime {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#stationSelect {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+select {
+    padding: 10px;
+    font-size: 1em;
+}
+
+button {
+    width: 80%; /* スマホで見やすいサイズに調整 */
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* 🚫 更新中のボタンスタイル */
+button.disabled {
+    background-color: #d6d6d6 !important;
+    color: #888 !important;
+    cursor: not-allowed;
+}
+
+/* 時刻表カード */
+.timetable-card {
+    background: #fff;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.remaining-time {
+    color: red;
+    font-size: 1.2em;
+}
+
+/* 時刻表一覧ボタン */
+.btn {
+    display: block;
+    width: 80%;
+    text-align: center;
+    background: #007BFF;
+    color: white;
+    padding: 12px;
+    border-radius: 5px;
+    margin: 20px auto;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+#hourGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin: 20px auto;
+    max-width: 400px;
+}
+
+.hour-tile {
+    background: #007BFF;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.hour-tile:hover {
+    background: #0056b3;
+}
+
+/* モーダルスタイル */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background: white;
+    margin: 15% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.close {
+    float: right;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.search-btn {
+    background: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 80%;
+    font-size: 1.2em;
+}
+
+.search-btn:hover {
+    background: #218838;
+}
+
+/* 戻るボタンはグレー */
+.back-btn {
+    background: #6c757d;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 80%;
+    font-size: 1.2em;
+}
+
+.back-btn:hover {
+    background: #5a6268;
+}
+
+/* 時刻表タイル */
+.hour-tile {
+    background: #007BFF;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.hour-tile:hover {
+    background: #0056b3;
+}
+

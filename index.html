@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>東豊線 時刻表アプリ</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <h1>東豊線 時刻表</h1>
+        <div id="currentTime"></div>
+
+        <div id="stationSelect">
+            <select id="station">
+                <option value="栄町">栄町駅</option>
+                <option value="北13条東">北13条東駅</option>
+            </select>
+
+            <select id="direction">
+                <option value="福住方面">福住方面</option>
+                <option value="栄町方面">栄町方面</option>
+            </select>
+        </div>
+
+        <button id="refreshBtn">更新</button>
+
+        <!-- 次の電車（3件） -->
+        <div id="timetable"></div>
+
+        <!-- 時刻表一覧へのリンク -->
+        <a href="timetable.html" class="btn">時刻表一覧を見る</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

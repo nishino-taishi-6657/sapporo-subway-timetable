@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時刻表一覧</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <h1>時刻表一覧</h1>
+
+        <!-- 駅・方面・曜日の選択 -->
+        <div id="stationSelect">
+            <select id="station">
+                <option value="栄町">栄町駅</option>
+                <option value="北13条東">北13条東駅</option>
+            </select>
+
+            <select id="direction">
+                <option value="福住方面">福住方面</option>
+                <option value="栄町方面">栄町方面</option>
+            </select>
+
+            <select id="dayType">
+                <option value="平日">平日</option>
+                <option value="土日祝">土日祝</option>
+            </select>
+        </div>
+
+        <!-- 出発時刻を検索 -->
+        <div>
+            <label for="searchTime">出発時刻を入力:</label>
+            <input type="time" id="searchTime">
+            <button class="search-btn" onclick="searchNearestTrains()">検索</button>
+        </div>
+        <div id="searchResults"></div>
+
+        <br />
+        <!-- 戻るボタン -->
+        <button class="back-btn" onclick="window.history.back()">← 戻る</button>
+
+        <!-- 📅 時刻表タイル表示 -->
+        <div id="hourGrid"></div>
+
+        <!-- ⏰ モーダル（ポップアップ） -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2 id="modalTitle"></h2>
+                <p id="modalTimes"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+    <script src="timetable.js"></script>
+</body>
+</html>
