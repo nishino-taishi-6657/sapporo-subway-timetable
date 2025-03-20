@@ -197,3 +197,15 @@ button.disabled {
     background: #0056b3;
 }
 
+/* フッター */
+footer {
+    position: fixed; /* 画面の下部に固定 */
+    bottom: 0;
+    width: 100%;
+    background: #333; /* ダークグレー */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9em;
+}
+
