@@ -199,13 +199,9 @@ button.disabled {
 
 /* フッター */
 footer {
-    position: fixed; /* 画面の下部に固定 */
-    bottom: 0;
-    width: 100%;
-    background: #333; /* ダークグレー */
+    background-color: #333;
     color: white;
     text-align: center;
-    padding: 10px;
-    font-size: 0.9em;
+    padding: 8px; 
+    font-size: 12px;
 }
-

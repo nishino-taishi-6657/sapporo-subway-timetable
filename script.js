@@ -1,4 +1,4 @@
-// ⏰ 現在時刻をリアルタイムで表示する関数
+// ⏰ 現在時刻をリアルタイム表示
 function updateCurrentTime() {
     const now = new Date();
     document.getElementById('currentTime').textContent = now.toLocaleString('ja-JP', {
@@ -7,23 +7,40 @@ function updateCurrentTime() {
         second: '2-digit'
     });
 }
-setInterval(updateCurrentTime, 1000); 
+setInterval(updateCurrentTime, 1000);
 
-document.addEventListener("DOMContentLoaded", function () {
+// stations.jsonを読み込む関数を追加
+async function loadStations() {
+    const response = await fetch('data/stations.json');
+    return await response.json();
+}
+
+// 駅選択時に方面をJSONに従ってロックする処理
+async function updateDirectionOptions(stationObj) {
+    const directionSelect = document.getElementById("direction");
+    directionSelect.innerHTML = stationObj.directions
+        .map(dir => `<option value="${dir}">${dir}</option>`).join('');
+    directionSelect.disabled = stationObj.directions.length === 1;
+}
+
+// DOMContentLoaded内を次のように書き換える（差分のみ）
+document.addEventListener("DOMContentLoaded", async function () {
     const stationSelect = document.getElementById("station");
     const directionSelect = document.getElementById("direction");
+    const stations = await loadStations();
 
-    // 初回ロード時に localStorage から設定を取得（ない場合は栄町駅＆福住方面）
-    const savedStation = localStorage.getItem("selectedStation") || "栄町";
-    const savedDirection = localStorage.getItem("selectedDirection") || "福住方面";
-
+    const savedStation = localStorage.getItem("selectedStation") || stations[0].filename;
     stationSelect.value = savedStation;
-    updateDirectionOptions(savedStation);
+    
+    const selectedStationObj = stations.find(s => s.filename === savedStation);
+    await updateDirectionOptions(selectedStationObj);
+    
+    const savedDirection = localStorage.getItem("selectedDirection") || selectedStationObj.directions[0];
     directionSelect.value = savedDirection;
 
-    // イベントリスナー設定
-    stationSelect.addEventListener("change", function () {
-        updateDirectionOptions(this.value);
+    stationSelect.addEventListener("change", async function () {
+        const currentStationObj = stations.find(s => s.filename === this.value);
+        await updateDirectionOptions(currentStationObj);
         localStorage.setItem("selectedStation", this.value);
         localStorage.setItem("selectedDirection", directionSelect.value);
         displayTimetable();
@@ -37,33 +54,21 @@ document.addEventListener("DOMContentLoaded", function () {
     displayTimetable();
 });
 
-// 🚆 駅の選択に応じて方面を変更
-function updateDirectionOptions(station) {
-    const directionSelect = document.getElementById("direction");
-    directionSelect.innerHTML = "";
-
-    if (station === "栄町") {
-        directionSelect.innerHTML = '<option value="福住方面">福住方面</option>';
-    } else {
-        directionSelect.innerHTML =
-            '<option value="福住方面">福住方面</option><option value="栄町方面">栄町方面</option>';
-    }
-}
-
-// 📂 CSVデータを読み込む関数
-async function loadCSV(station) {
-    const csvPath = `data/${station}_timetable.csv`;
-    const response = await fetch(csvPath);
+// 📂 CSVを読み込む関数
+async function loadCSV(filename) {
+    const response = await fetch(`data/${filename}`);
     const csvText = await response.text();
     return Papa.parse(csvText, { header: true }).data;
 }
 
-// 📅 時刻表を表示する関数（修正後）
+// 📅 時刻表を表示する関数
 async function displayTimetable() {
-    const station = document.getElementById('station').value;
-    const direction = document.getElementById('direction').value;
-    const data = await loadCSV(station === '栄町' ? 'sakaemachi' : 'kita13');
+    const stationSelect = document.getElementById('station');
+    const directionSelect = document.getElementById('direction');
+    const stationName = stationSelect.options[stationSelect.selectedIndex].textContent;
+    const direction = directionSelect.value;
 
+    const data = await loadCSV(stationSelect.value);
     if (!data.length) {
         document.getElementById("timetable").innerHTML = "<p>時刻表データがありません</p>";
         return;
@@ -74,7 +79,7 @@ async function displayTimetable() {
     const currentTime = now.getHours() * 60 + now.getMinutes();
 
     const filtered = data
-        .filter(row => row.曜日 === todayType && row.方向 === direction && row.駅名 === station)
+        .filter(row => row.曜日 === todayType && row.方向 === direction && row.駅名 === stationName)
         .map(row => {
             const [hour, min] = row.発車時刻.split(':');
             return { time: row.発車時刻, minutes: parseInt(hour) * 60 + parseInt(min) };
@@ -91,13 +96,12 @@ async function displayTimetable() {
     `).join('') : '<p>本日これ以上の電車はありません</p>';
 }
 
-// 🛑 更新ボタンの連打防止（5秒間クールダウン）
+// 🛑 更新ボタン連打防止 (5秒間)
 let lastUpdateTime = 0;
 const updateCooldown = 5000;
 
 document.getElementById("refreshBtn").addEventListener("click", function () {
     const now = Date.now();
-
     if (now - lastUpdateTime < updateCooldown) {
         alert("短時間での連続更新はできません。少し待ってください。");
         return;
@@ -117,6 +121,42 @@ document.getElementById("refreshBtn").addEventListener("click", function () {
     displayTimetable();
 });
 
-// 初回表示
+// 📌 DOM読み込み完了時処理
+document.addEventListener("DOMContentLoaded", async function () {
+    const stationSelect = document.getElementById("station");
+    const directionSelect = document.getElementById("direction");
+    const stations = await loadStations();
+
+    // 駅リストの動的作成
+    stationSelect.innerHTML = stations.map(station =>
+        `<option value="${station.filename}">${station.name}</option>`
+    ).join('');
+
+    // localStorageから取得した値を使って選択状態を復元
+    const savedStation = localStorage.getItem("selectedStation") || stations[0].filename;
+    stationSelect.value = savedStation;
+
+    const selectedStationObj = stations.find(s => s.filename === savedStation);
+    updateDirectionOptions(selectedStationObj);
+
+    const savedDirection = localStorage.getItem("selectedDirection") || selectedStationObj.directions[0];
+    directionSelect.value = savedDirection;
+
+    stationSelect.addEventListener("change", function () {
+        const currentStationObj = stations.find(s => s.filename === this.value);
+        updateDirectionOptions(currentStationObj);
+        localStorage.setItem("selectedStation", this.value);
+        localStorage.setItem("selectedDirection", directionSelect.value);
+        displayTimetable();
+    });
+
+    directionSelect.addEventListener("change", function () {
+        localStorage.setItem("selectedDirection", this.value);
+        displayTimetable();
+    });
+
+    displayTimetable();
+});
+
+// ⏰ 初回時刻表示
 updateCurrentTime();
-displayTimetable();

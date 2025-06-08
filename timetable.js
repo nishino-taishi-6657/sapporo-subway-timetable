@@ -1,14 +1,31 @@
-document.addEventListener('DOMContentLoaded', function () {
+// DOM読み込み時の初期化処理
+document.addEventListener('DOMContentLoaded', async function () {
     const stationSelect = document.getElementById('station');
     const directionSelect = document.getElementById('direction');
     const dayTypeSelect = document.getElementById('dayType');
+    const stations = await loadStations();
 
-    stationSelect.value = localStorage.getItem('selectedStation') || '栄町';
-    directionSelect.value = localStorage.getItem('selectedDirection') || '福住方面';
+    // 駅リストを動的に生成
+    stationSelect.innerHTML = stations.map(station =>
+        `<option value="${station.filename}">${station.name}</option>`
+    ).join('');
+
+    const savedStation = localStorage.getItem('selectedStation') || stations[0].filename;
+    stationSelect.value = savedStation;
+
+    const selectedStationObj = stations.find(s => s.filename === savedStation);
+    updateDirectionOptions(selectedStationObj);
+
+    const savedDirection = localStorage.getItem('selectedDirection') || selectedStationObj.directions[0];
+    directionSelect.value = savedDirection;
+
     dayTypeSelect.value = localStorage.getItem('selectedDayType') || '平日';
 
     stationSelect.addEventListener('change', function () {
+        const currentStationObj = stations.find(s => s.filename === this.value);
+        updateDirectionOptions(currentStationObj);
         localStorage.setItem('selectedStation', this.value);
+        localStorage.setItem('selectedDirection', directionSelect.value);
         displayFullTimetable();
     });
 
@@ -25,7 +42,21 @@ document.addEventListener('DOMContentLoaded', function () {
     displayFullTimetable();
 });
 
-// 📂 CSVデータを読み込む
+// stations.jsonを読み込む
+async function loadStations() {
+    const response = await fetch('data/stations.json');
+    return await response.json();
+}
+
+// 駅の選択に応じて方面を設定（方面1つの場合は選択不可）
+function updateDirectionOptions(stationObj) {
+    const directionSelect = document.getElementById("direction");
+    directionSelect.innerHTML = stationObj.directions
+        .map(dir => `<option value="${dir}">${dir}</option>`).join('');
+    directionSelect.disabled = stationObj.directions.length === 1;
+}
+
+// loadCSV関数内を以下のように修正
 async function loadCSV(station) {
     const csvPath = `data/${station}_timetable.csv`;
     const response = await fetch(csvPath);
@@ -33,19 +64,23 @@ async function loadCSV(station) {
     return Papa.parse(csvText, { header: true }).data;
 }
 
-// 🟢 時刻表タイル表示（並び順修正 & 00時を最後に表示）
 async function displayFullTimetable() {
-    const station = document.getElementById('station').value;
-    const direction = document.getElementById('direction').value;
+    const stationSelect = document.getElementById('station');
+    const directionSelect = document.getElementById('direction');
     const dayType = document.getElementById('dayType').value;
-    const data = await loadCSV(station === '栄町' ? 'sakaemachi' : 'kita13');
+
+    const stationFileName = stationSelect.value;
+    const stationName = stationSelect.options[stationSelect.selectedIndex].textContent;
+    const direction = directionSelect.value;
+
+    const data = await loadCSV(stationFileName);
 
     const groupedByHour = {};
     data.forEach(row => {
-        if (row.曜日 === dayType && row.方向 === direction && row.駅名 === station) {
+        if (row.曜日 === dayType && row.方向 === direction && row.駅名 === stationName) {
             let [hour, min] = row.発車時刻.split(':');
             hour = parseInt(hour, 10);
-            if (hour === 0) hour = 24; // 00時を24時扱いにする
+            if (hour === 0) hour = 24;
             if (!groupedByHour[hour]) groupedByHour[hour] = [];
             groupedByHour[hour].push(min);
         }
@@ -53,28 +88,30 @@ async function displayFullTimetable() {
 
     const hourGrid = document.getElementById('hourGrid');
     hourGrid.innerHTML = Object.keys(groupedByHour)
-        .map(Number).sort((a, b) => a - b) // 数値でソート
+        .map(Number).sort((a, b) => a - b)
         .map(hour => `
-            <button class="hour-tile" onclick="openModal('${hour % 24}', '${groupedByHour[hour].join(', ')}')">${hour % 24}時</button>
+            <button class="hour-tile" onclick="openModal('${hour % 24}', '${groupedByHour[hour].join(', ')}')">
+                ${hour % 24}時
+            </button>
         `).join('');
 }
 
-// ⏰ モーダルを開く（分のみ表示）
+// モーダルを開く（分のみ表示）
 function openModal(hour, minutes) {
-    document.getElementById('modalTitle').innerText = `${hour}時 の発車時刻`;
+    document.getElementById('modalTitle').innerText = `${hour}時の発車時刻`;
     document.getElementById('modalTimes').innerText = minutes;
     document.getElementById('modal').style.display = "block";
 }
 
-// ❌ モーダルを閉じる
+// モーダルを閉じる
 function closeModal() {
     document.getElementById('modal').style.display = "none";
 }
 
-// 🔎 指定した時刻に最も近い電車3件を検索
+// 時刻検索機能
 async function searchNearestTrains() {
-    const station = document.getElementById('station').value;
-    const direction = document.getElementById('direction').value;
+    const stationSelect = document.getElementById('station');
+    const directionSelect = document.getElementById('direction');
     const dayType = document.getElementById('dayType').value;
     const searchTime = document.getElementById('searchTime').value;
 
@@ -86,10 +123,14 @@ async function searchNearestTrains() {
     const [searchHour, searchMin] = searchTime.split(':').map(Number);
     const searchMinutes = searchHour * 60 + searchMin;
 
-    const data = await loadCSV(station === '栄町' ? 'sakaemachi' : 'kita13');
+    const stationFileName = stationSelect.value;
+    const stationName = stationSelect.options[stationSelect.selectedIndex].textContent;
+    const direction = directionSelect.value;
+
+    const data = await loadCSV(stationFileName);
 
     const nearestTrains = data
-        .filter(row => row.曜日 === dayType && row.方向 === direction && row.駅名 === station)
+        .filter(row => row.曜日 === dayType && row.方向 === direction && row.駅名 === stationName)
         .map(row => {
             const [hour, min] = row.発車時刻.split(':');
             return { time: row.発車時刻, totalMinutes: parseInt(hour) * 60 + parseInt(min) };
@@ -107,3 +148,4 @@ async function searchNearestTrains() {
         searchResults.innerHTML = `<p>該当する電車がありません</p>`;
     }
 }
+

@@ -34,6 +34,25 @@
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        async function initStations() {
+            const response = await fetch('data/stations.json');
+            const stations = await response.json();
+    
+            const stationSelect = document.getElementById('station');
+            stationSelect.innerHTML = stations.map(s => 
+                `<option value="${s.filename}">${s.name}</option>`
+            ).join('');
+            
+            const savedStation = localStorage.getItem('selectedStation') || stations[0].filename;
+            stationSelect.value = savedStation;
+    
+            updateDirectionOptions(stations.find(s => s.filename === savedStation));
+            displayTimetable();
+        }
+    
+        document.addEventListener('DOMContentLoaded', initStations);
+    </script>    
 </body>
 </html>
 
