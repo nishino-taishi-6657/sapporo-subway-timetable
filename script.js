@@ -16,7 +16,7 @@ async function loadStations() {
 }
 
 // 駅選択時に方面をJSONに従ってロックする処理
-async function updateDirectionOptions(stationObj) {
+function updateDirectionOptions(stationObj) {
     const directionSelect = document.getElementById("direction");
     directionSelect.innerHTML = stationObj.directions
         .map(dir => `<option value="${dir}">${dir}</option>`).join('');
