@@ -1,6 +1,7 @@
 [
     { "name": "栄町", "filename": "sakaemachi_timetable.csv", "isTerminal": true, "directions": ["福住方面"] },
     { "name": "北13条東", "filename": "kita13_timetable.csv", "isTerminal": false, "directions": ["福住方面", "栄町方面"] },
+    { "name": "さっぽろ", "filename": "sapporo_timetable.csv", "isTerminal": false, "directions": ["福住方面", "栄町方面"] },
     { "name": "美園", "filename": "misono_timetable.csv", "isTerminal": false, "directions": ["福住方面", "栄町方面"] },
     { "name": "福住", "filename": "fukuzumi_timetable.csv", "isTerminal": true, "directions": ["栄町方面"] }
   ]
