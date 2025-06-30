@@ -202,6 +202,53 @@ footer {
     background-color: #333;
     color: white;
     text-align: center;
-    padding: 8px; 
+    padding: 8px;
     font-size: 12px;
+}
+
+/* ダークモード設定 */
+body.dark-mode {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+
+body.dark-mode #app {
+    background: #1e1e1e;
+    box-shadow: 0 3px 6px rgba(255,255,255,0.1);
+}
+
+body.dark-mode .timetable-card,
+body.dark-mode .modal-content {
+    background: #272727;
+}
+
+body.dark-mode button,
+body.dark-mode .btn,
+body.dark-mode .back-btn,
+body.dark-mode .hour-tile,
+body.dark-mode .search-btn {
+    background-color: #444;
+    color: #fff;
+}
+
+body.dark-mode button:hover,
+body.dark-mode .btn:hover,
+body.dark-mode .back-btn:hover,
+body.dark-mode .hour-tile:hover,
+body.dark-mode .search-btn:hover {
+    background-color: #555;
+}
+
+#themeToggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+body.dark-mode #themeToggle {
+    color: #fff;
 }

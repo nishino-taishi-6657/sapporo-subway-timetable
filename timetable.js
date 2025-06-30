@@ -1,3 +1,18 @@
+function applySavedTheme() {
+    const isDark = localStorage.getItem('theme') === 'dark';
+    document.body.classList.toggle('dark-mode', isDark);
+}
+
+function setupThemeToggle() {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+        const isDark = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+    applySavedTheme();
+}
+
 // DOM読み込み時の初期化処理
 document.addEventListener('DOMContentLoaded', async function () {
     const stationSelect = document.getElementById('station');
@@ -40,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
     displayFullTimetable();
+    setupThemeToggle();
 });
 
 // stations.jsonを読み込む
