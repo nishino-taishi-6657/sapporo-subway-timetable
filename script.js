@@ -9,6 +9,7 @@ function updateCurrentTime() {
 }
 setInterval(updateCurrentTime, 1000);
 
+
 // stations.jsonを読み込む関数を追加
 async function loadStations() {
     const response = await fetch('data/stations.json');
@@ -16,43 +17,13 @@ async function loadStations() {
 }
 
 // 駅選択時に方面をJSONに従ってロックする処理
-async function updateDirectionOptions(stationObj) {
+function updateDirectionOptions(stationObj) {
     const directionSelect = document.getElementById("direction");
     directionSelect.innerHTML = stationObj.directions
         .map(dir => `<option value="${dir}">${dir}</option>`).join('');
     directionSelect.disabled = stationObj.directions.length === 1;
 }
 
-// DOMContentLoaded内を次のように書き換える（差分のみ）
-document.addEventListener("DOMContentLoaded", async function () {
-    const stationSelect = document.getElementById("station");
-    const directionSelect = document.getElementById("direction");
-    const stations = await loadStations();
-
-    const savedStation = localStorage.getItem("selectedStation") || stations[0].filename;
-    stationSelect.value = savedStation;
-    
-    const selectedStationObj = stations.find(s => s.filename === savedStation);
-    await updateDirectionOptions(selectedStationObj);
-    
-    const savedDirection = localStorage.getItem("selectedDirection") || selectedStationObj.directions[0];
-    directionSelect.value = savedDirection;
-
-    stationSelect.addEventListener("change", async function () {
-        const currentStationObj = stations.find(s => s.filename === this.value);
-        await updateDirectionOptions(currentStationObj);
-        localStorage.setItem("selectedStation", this.value);
-        localStorage.setItem("selectedDirection", directionSelect.value);
-        displayTimetable();
-    });
-
-    directionSelect.addEventListener("change", function () {
-        localStorage.setItem("selectedDirection", this.value);
-        displayTimetable();
-    });
-
-    displayTimetable();
-});
 
 // 📂 CSVを読み込む関数
 async function loadCSV(filename) {

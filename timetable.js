@@ -1,3 +1,4 @@
+
 // DOM読み込み時の初期化処理
 document.addEventListener('DOMContentLoaded', async function () {
     const stationSelect = document.getElementById('station');
@@ -58,7 +59,7 @@ function updateDirectionOptions(stationObj) {
 
 // loadCSV関数内を以下のように修正
 async function loadCSV(station) {
-    const csvPath = `data/${station}_timetable.csv`;
+    const csvPath = `data/${station}`;
     const response = await fetch(csvPath);
     const csvText = await response.text();
     return Papa.parse(csvText, { header: true }).data;

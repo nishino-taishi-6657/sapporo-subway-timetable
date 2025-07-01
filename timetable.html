@@ -8,6 +8,8 @@
 </head>
 <body>
     <div id="app">
+        <!-- テーマ切り替えボタン -->
+        <button id="themeToggle" aria-label="テーマ切り替え">🌓</button>
         <h1>時刻表一覧</h1>
 
         <!-- 駅・方面・曜日の選択（修正版） -->
@@ -54,12 +56,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
     <script src="timetable.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+
+    <div id="footer"></div>
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+    </script>
 </body>
 </html>
-
-<div id="footer"></div>
-<script>
-    fetch('footer.html')
-        .then(response => response.text())
-        .then(data => document.getElementById('footer').innerHTML = data);
-</script>

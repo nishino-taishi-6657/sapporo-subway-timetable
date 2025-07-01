@@ -6,6 +6,8 @@ body {
 }
 
 #app {
+    /* トグルボタン配置用 */
+    position: relative;
     max-width: 400px;
     margin: auto;
     background: #fff;
@@ -202,6 +204,59 @@ footer {
     background-color: #333;
     color: white;
     text-align: center;
-    padding: 8px; 
+    padding: 8px;
     font-size: 12px;
+}
+
+/* ダークテーマ */
+body.dark {
+    background-color: #121212;
+    color: #f1f1f1;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark #app {
+    background: #1e1e1e;
+    box-shadow: 0 3px 6px rgba(255,255,255,0.1);
+}
+
+body.dark .timetable-card,
+body.dark .modal-content {
+    background: #272727;
+}
+
+body.dark button,
+body.dark .btn,
+body.dark .back-btn,
+body.dark .hour-tile,
+body.dark .search-btn {
+    background-color: #444;
+    color: #fff;
+}
+
+body.dark button:hover,
+body.dark .btn:hover,
+body.dark .back-btn:hover,
+body.dark .hour-tile:hover,
+body.dark .search-btn:hover {
+    background-color: #555;
+}
+
+#themeToggle {
+    /* ヘッダー右上に固定 */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+#themeToggle:hover {
+    opacity: 0.8;
+}
+
+body.dark #themeToggle {
+    color: #fff;
 }
