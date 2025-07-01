@@ -8,8 +8,6 @@
 </head>
 <body>
     <div id="app">
-        <!-- テーマ切り替えボタン -->
-        <button id="themeToggle" aria-label="テーマ切り替え">🌓</button>
         <h1>東豊線 時刻表</h1>
         <div id="currentTime"></div>
 
@@ -49,5 +47,7 @@
             .then(response => response.text())
             .then(data => document.getElementById('footer').innerHTML = data);
     </script>
+    <!-- テーマ切り替えボタンをページ共通で表示 -->
+    <button id="themeToggle" aria-label="テーマ切り替え">🌓</button>
 </body>
 </html>
