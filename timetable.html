@@ -8,18 +8,18 @@
 </head>
 <body>
     <div id="app">
+        <!-- テーマ切り替えボタン -->
+        <button id="themeToggle" aria-label="テーマ切り替え">🌓</button>
         <h1>時刻表一覧</h1>
 
-        <!-- 駅・方面・曜日の選択 -->
+        <!-- 駅・方面・曜日の選択（修正版） -->
         <div id="stationSelect">
             <select id="station">
-                <option value="栄町">栄町駅</option>
-                <option value="北13条東">北13条東駅</option>
+                <!-- JavaScriptで動的に設定 -->
             </select>
 
             <select id="direction">
-                <option value="福住方面">福住方面</option>
-                <option value="栄町方面">栄町方面</option>
+                <!-- JavaScriptで動的に設定 -->
             </select>
 
             <select id="dayType">
@@ -27,6 +27,7 @@
                 <option value="土日祝">土日祝</option>
             </select>
         </div>
+        
 
         <!-- 出発時刻を検索 -->
         <div>
@@ -55,12 +56,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
     <script src="timetable.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+
+    <div id="footer"></div>
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+    </script>
 </body>
 </html>
-
-<div id="footer"></div>
-<script>
-    fetch('footer.html')
-        .then(response => response.text())
-        .then(data => document.getElementById('footer').innerHTML = data);
-</script>
