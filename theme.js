@@ -4,8 +4,13 @@ if (prefersDark) {
     document.body.classList.add('dark');
 }
 
-// ボタンクリックでテーマを切り替え
-document.getElementById('themeToggle').addEventListener('click', () => {
-    const enabled = document.body.classList.toggle('dark');
-    localStorage.setItem('theme', enabled ? 'dark' : 'light');
+// ボタンが読み込まれてからイベントを設定
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('themeToggle');
+    if (btn) {
+        btn.addEventListener('click', () => {
+            const enabled = document.body.classList.toggle('dark');
+            localStorage.setItem('theme', enabled ? 'dark' : 'light');
+        });
+    }
 });
