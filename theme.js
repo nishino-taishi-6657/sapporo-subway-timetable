@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    window.attachThemeToggle = attachToggle;
+
     attachToggle();
     new MutationObserver(attachToggle).observe(document.body, { childList: true, subtree: true });
 });
