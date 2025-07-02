@@ -5,12 +5,19 @@ if (prefersDark) {
 }
 
 // ボタンが読み込まれてからイベントを設定
+// ボタンの存在を監視してイベントを登録
 document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('themeToggle');
-    if (btn) {
-        btn.addEventListener('click', () => {
-            const enabled = document.body.classList.toggle('dark');
-            localStorage.setItem('theme', enabled ? 'dark' : 'light');
-        });
+    function attachToggle() {
+        const btn = document.getElementById('themeToggle');
+        if (btn && !btn.dataset.listenerAdded) {
+            btn.addEventListener('click', () => {
+                const enabled = document.body.classList.toggle('dark');
+                localStorage.setItem('theme', enabled ? 'dark' : 'light');
+            });
+            btn.dataset.listenerAdded = 'true';
+        }
     }
+
+    attachToggle();
+    new MutationObserver(attachToggle).observe(document.body, { childList: true, subtree: true });
 });
