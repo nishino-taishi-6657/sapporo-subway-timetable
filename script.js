@@ -55,6 +55,8 @@ async function displayTimetable() {
             const [hour, min] = row.発車時刻.split(':');
             return { time: row.発車時刻, minutes: parseInt(hour) * 60 + parseInt(min) };
         })
+        // 発車時刻を昇順に並べ替える
+        .sort((a, b) => a.minutes - b.minutes)
         .filter(entry => entry.minutes >= currentTime)
         .slice(0, 3);
 

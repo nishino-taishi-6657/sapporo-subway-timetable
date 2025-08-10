@@ -58,8 +58,9 @@ select {
     font-size: 1em;
 }
 
-button {
-    width: 80%; /* スマホで見やすいサイズに調整 */
+/* サイドメニューボタンを除く */
+button:not(#menuBtn) {
+    width: 80%;
     padding: 12px;
     background-color: #28a745;
     color: white;
@@ -70,7 +71,8 @@ button {
     transition: background 0.3s ease;
 }
 
-button:hover {
+/* サイドメニューボタンを除く */
+button:not(#menuBtn):hover {
     background-color: #218838;
 }
 
@@ -128,20 +130,6 @@ button.disabled {
     gap: 10px;
     margin: 20px auto;
     max-width: 400px;
-}
-
-.hour-tile {
-    background: #007BFF;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-}
-
-.hour-tile:hover {
-    background: #0056b3;
 }
 
 /* モーダルスタイル */
@@ -244,7 +232,8 @@ body.dark .modal-content {
     background: #272727;
 }
 
-body.dark button,
+/* ダークテーマ時のボタン (menuBtn除外) */
+body.dark button:not(#menuBtn),
 body.dark .btn,
 body.dark .back-btn,
 body.dark .hour-tile,
@@ -253,12 +242,23 @@ body.dark .search-btn {
     color: #fff;
 }
 
-body.dark button:hover,
+/* ダークテーマ時のホバー (menuBtn除外) */
+body.dark button:not(#menuBtn):hover,
 body.dark .btn:hover,
 body.dark .back-btn:hover,
 body.dark .hour-tile:hover,
 body.dark .search-btn:hover {
     background-color: #555;
+}
+
+/* ダークテーマのヘッダー色 */
+body.dark header {
+    background-color: #1e1e1e;
+}
+
+/* ダークテーマのリンク色 */
+body.dark a {
+    color: #80b3ff;
 }
 
 
