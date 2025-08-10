@@ -130,20 +130,6 @@ button.disabled {
     max-width: 400px;
 }
 
-.hour-tile {
-    background: #007BFF;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-}
-
-.hour-tile:hover {
-    background: #0056b3;
-}
-
 /* モーダルスタイル */
 .modal {
     display: none;
@@ -259,6 +245,16 @@ body.dark .back-btn:hover,
 body.dark .hour-tile:hover,
 body.dark .search-btn:hover {
     background-color: #555;
+}
+
+/* ダークテーマのヘッダー色 */
+body.dark header {
+    background-color: #1e1e1e;
+}
+
+/* ダークテーマのリンク色 */
+body.dark a {
+    color: #80b3ff;
 }
 
 

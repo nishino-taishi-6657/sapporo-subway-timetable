@@ -81,18 +81,22 @@ async function displayFullTimetable() {
         if (row.曜日 === dayType && row.方向 === direction && row.駅名 === stationName) {
             let [hour, min] = row.発車時刻.split(':');
             hour = parseInt(hour, 10);
-            if (hour === 0) hour = 24;
             if (!groupedByHour[hour]) groupedByHour[hour] = [];
             groupedByHour[hour].push(min);
         }
+    });
+
+    // 各時間帯の分を昇順に並べ替える
+    Object.keys(groupedByHour).forEach(hour => {
+        groupedByHour[hour].sort((a, b) => parseInt(a) - parseInt(b));
     });
 
     const hourGrid = document.getElementById('hourGrid');
     hourGrid.innerHTML = Object.keys(groupedByHour)
         .map(Number).sort((a, b) => a - b)
         .map(hour => `
-            <button class="hour-tile" onclick="openModal('${hour % 24}', '${groupedByHour[hour].join(', ')}')">
-                ${hour % 24}時
+            <button class="hour-tile" onclick="openModal('${hour}', '${groupedByHour[hour].join(', ')}')">
+                ${hour}時
             </button>
         `).join('');
 }
@@ -140,13 +144,24 @@ async function searchNearestTrains() {
         .slice(0, 3);
 
     const searchResults = document.getElementById('searchResults');
+    // 結果表示エリアを初期化
+    searchResults.innerHTML = '';
+
     if (nearestTrains.length > 0) {
-        searchResults.innerHTML = `<h3>近い電車</h3>
-            <ul>
-                ${nearestTrains.map(train => `<li>${train.time}（あと ${train.totalMinutes - searchMinutes} 分）</li>`).join('')}
-            </ul>`;
+        const heading = document.createElement('h3');
+        heading.textContent = '近い電車';
+        const list = document.createElement('ul');
+        nearestTrains.forEach(train => {
+            const li = document.createElement('li');
+            li.textContent = `${train.time}（あと ${train.totalMinutes - searchMinutes} 分）`;
+            list.appendChild(li);
+        });
+        searchResults.appendChild(heading);
+        searchResults.appendChild(list);
     } else {
-        searchResults.innerHTML = `<p>該当する電車がありません</p>`;
+        const message = document.createElement('p');
+        message.textContent = '該当する電車がありません';
+        searchResults.appendChild(message);
     }
 }
 
